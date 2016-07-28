@@ -25,6 +25,8 @@ Vagrant.configure(2) do |config|
       ip = "44.0.0.#{i+100}"
       config.vm.network :private_network, ip: ip
 
+      # Section (A) -- etcd
+
       # First machine gets a new state, and is the first in our cluster list
       state = "new"
       cluster = "app-01=http:\\/\\/44.0.0.101:2380"
@@ -41,6 +43,8 @@ Vagrant.configure(2) do |config|
       # The actual vagrant provision call
       config.vm.provision "shell", path: "etcd.sh", name: "etcd", env: {"IP" => ip, "CLUSTER_STATE" => state, "CLUSTER" => cluster}
 
+      # Section (B) -- flannel
+
       # Provision flannel binaries and services
       config.vm.provision "shell", path: "flanneld.sh", name: "flannel"
 
@@ -56,6 +60,8 @@ Vagrant.configure(2) do |config|
       if $instances > 1 && i < $instances
         config.vm.provision "shell", name: "etcd-add", inline: "etcdctl member add app-0#{i+1} http://44.0.0.#{i+101}:2380"
       end
+
+      # Section (C) -- docker
 
       config.vm.provision "docker"
 
