@@ -47,9 +47,14 @@ Vagrant.configure(2) do |config|
       if i == 1
         # Create our flannel configuration in etcd
         config.vm.provision "shell", name: "flannel-config", inline: "etcdctl mkdir /network; etcdctl mk /network/config </vagrant/flanneld.json"
+      end
 
-        # Start flannel
-        config.vm.provision "shell", name: "flannel", inline: "start flanneld"
+      # Start flannel
+      config.vm.provision "shell", name: "flannel", inline: "start flanneld"
+
+      # Add the next node if we aren't the last node
+      if $instances > 1 && i < $instances
+        config.vm.provision "shell", name: "etcd-add", inline: "etcdctl member add app-0#{i+1} http://44.0.0.#{i+101}:2380"
       end
 
       config.vm.provision "docker"
