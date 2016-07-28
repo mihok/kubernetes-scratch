@@ -27,7 +27,7 @@ Vagrant.configure(2) do |config|
 
       # First machine gets a new state, and is the first in our cluster list
       state = "new"
-      cluster = "app-01=http:\\/\\/#{ip}:2380"
+      cluster = "app-01=http:\\/\\/44.0.0.101:2380"
       if i > 1
         # All other machines get an existing state since they're set up sequentially
         state = "existing"
