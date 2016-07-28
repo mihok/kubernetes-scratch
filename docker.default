@@ -1,0 +1,5 @@
+if [ -f /run/flannel/subnet.env ]; then
+    source /run/flannel/subnet.env
+
+    DOCKER_OPTS="--bip=${FLANNEL_SUBNET} --mtu=${FLANNEL_MTU}"
+fi
