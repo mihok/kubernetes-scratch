@@ -66,6 +66,21 @@ Vagrant.configure(2) do |config|
       config.vm.provision "docker"
 
       config.vm.provision "shell", name: "docker", path: "docker.sh"
+
+      # Section (D) -- kubernetes
+
+      config.vm.provision "shell", name: "kubernetes", path: "kubernetes.sh"
+
+      config.vm.provision "shell", name: "kubernetes", path: "kubelet.sh"
+      config.vm.provision "shell", name: "kubernetes", path: "kube-proxy.sh"
+
+      # Only provision these if we're the last node
+      if i == $instances
+        config.vm.provision "shell", name: "kubernetes", path: "kube-apiserver.sh"
+        config.vm.provision "shell", name: "kubernetes", path: "kube-controller-manager.sh"
+        config.vm.provision "shell", name: "kubernetes", path: "kube-scheduler.sh"
+      end
+
     end
   end
 end
